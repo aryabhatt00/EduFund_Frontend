@@ -1,0 +1,108 @@
+/* src/pages/Home.css */
+
+.home-wrapper {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  min-height: 110vh;
+  overflow: hidden;
+  background-color: #ffffff; /* Entire page background is now white */
+}
+
+.home-wrapper.no-background {
+  background: none !important;
+}
+
+/* Left Pane */
+.left-pane {
+  width: 50%;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 3rem 2rem;
+}
+
+.welcome-text h2 {
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: #1c1c1c;
+}
+
+.brand-name {
+  color: #1c1c1c;
+}
+
+.welcome-text p {
+  margin: 1rem 0;
+  color: #444;
+  font-size: 1rem;
+}
+
+.button-group button {
+  margin-right: 1rem;
+  border-radius: 5px;
+}
+
+.bank-icon {
+  text-align: center;
+  margin-top: 2rem; /* push down slightly if needed */
+  margin-bottom: 2rem; /* optional: adds spacing from bottom */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.bank-icon img {
+  max-width: 180px;
+  height: auto;
+}
+
+/* Right Pane */
+.feature-pane {
+  width: 50%;
+  background-color: #ffffff; /* Match left pane */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+/* 🔻 Responsive Layout 🔻 */
+@media (max-width: 992px) {
+  .home-wrapper {
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  .left-pane, .feature-pane {
+    width: 100%;
+    padding: 2rem 1rem;
+  }
+
+  .feature-pane {
+    padding-top: 0;
+  }
+
+  .bank-icon img {
+    max-width: 120px;
+  }
+
+  .welcome-text h2 {
+    font-size: 1.8rem;
+    text-align: center;
+  }
+
+  .welcome-text p {
+    text-align: center;
+  }
+
+  .button-group {
+    text-align: center;
+  }
+
+  .feature-pane h2 {
+    font-size: 1.6rem !important;
+  }
+}

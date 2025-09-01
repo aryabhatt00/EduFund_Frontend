@@ -1,0 +1,14 @@
+.session-timer {
+  background-color: #0e1f2b;
+  color: white;
+  font-size: 0.9rem;
+  border-radius: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.session-timer span,
+.session-timer strong {
+  font-weight: 500;
+  color: white;
+}
