@@ -229,8 +229,7 @@ const AdminLogin = () => {
                 "&:hover": { textDecoration: "underline" },
               }}
             >
-              {" "}
-              Forgot username or password?{" "}
+
             </Typography>{" "}
           </form>{" "}
         </Paper>{" "}
