@@ -8,7 +8,7 @@ import "./Navbar.css";
 const AppNavbar = () => {
   const [role, setRole] = useState(null); // 'admin' | 'customer' | null
   const navigate = useNavigate();
-
+  
   useEffect(() => {
     const checkLogin = () => {
       const isAdmin = !!localStorage.getItem("adminToken");

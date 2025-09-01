@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Form, Button, Alert } from 'react-bootstrap';
 import './CreateAccount.css'; 
-
+  const API = process.env.REACT_APP_API_URL;
 const CreateAccount = () => {
   const [account, setAccount] = useState({
     accountNumber: '',
@@ -18,7 +18,7 @@ const CreateAccount = () => {
     e.preventDefault();
 
     try {
-      const res = await fetch('http://localhost:8080/account/create', {
+      const res = await fetch(`${API}/account/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

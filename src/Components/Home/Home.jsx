@@ -17,7 +17,7 @@ const Home = () => {
     email: localStorage.getItem("customerEmail") || "",
     accountNumber: localStorage.getItem("accountNumber") || "",
   });
-
+  
   useEffect(() => {
     const syncLoginStatus = () => {
       setIsLoggedIn(localStorage.getItem("isLoggedIn") === "true");

@@ -16,13 +16,13 @@ const CustomerLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-
+  const API = process.env.REACT_APP_API_URL;
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
     try {
-      const res = await fetch("http://localhost:8080/customer/login", {
+      const res = await fetch(`${API}/customer/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -5,7 +5,7 @@ const FindCustomer = () => {
   const [input, setInput] = useState({ email: '', phone: '' ,question1: '', question2: '', question3: ''});
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
-
+  const API = process.env.REACT_APP_API_URL;
   const handleChange = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
@@ -17,7 +17,7 @@ const FindCustomer = () => {
     const token = localStorage.getItem("token"); 
 
     try {
-      const res = await fetch('http://localhost:8080/customer/find', {
+      const res = await fetch(`${API}/customer/find`, {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json'

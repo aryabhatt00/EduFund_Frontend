@@ -4,7 +4,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./CreateCustomer.css";
-
+  
 const CreateCustomer = () => {
   const [form, setForm] = useState({
     customerName: "",
@@ -24,7 +24,7 @@ const CreateCustomer = () => {
       accountBalance: "",
     },
   });
-
+  const API = process.env.REACT_APP_API_URL;
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -48,7 +48,7 @@ const CreateCustomer = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:8080/customer/create", form);
+      const res = await axios.post(`${API}/customer/create`, form);
       const { message, customerId, accountNumber } = res.data;
       toast.success(`${message}\nCustomer ID: ${customerId}\nAccount: ${accountNumber}`);
     } catch (err) {

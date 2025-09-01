@@ -7,7 +7,7 @@ const SessionTimer = () => {
   useEffect(() => {
     const loginTime = localStorage.getItem("customerLoginTime");
     if (!loginTime) return;
-
+  
     const updateTimer = () => {
       const elapsed = Math.floor((Date.now() - parseInt(loginTime)) / 1000);
       const timeLeft = 600 - elapsed;

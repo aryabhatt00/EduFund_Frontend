@@ -9,7 +9,7 @@ const Admin = () => {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-
+  const API = process.env.REACT_APP_API_URL;
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -23,9 +23,9 @@ const Admin = () => {
     };
 
     Promise.all([
-      fetch("http://localhost:8080/admin/customers", { headers }).then(res => res.json()),
-      fetch("http://localhost:8080/admin/accounts", { headers }).then(res => res.json()),
-      fetch("http://localhost:8080/admin/transactions", { headers }).then(res => res.json())
+      fetch(`${API}/admin/customers`, { headers }).then(res => res.json()),
+      fetch(`${API}/admin/accounts`, { headers }).then(res => res.json()),
+      fetch(`${API}/admin/transactions`, { headers }).then(res => res.json())
     ])
       .then(([customersData, accountsData, transactionsData]) => {
         setCustomers(customersData);

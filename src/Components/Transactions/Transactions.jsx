@@ -12,7 +12,7 @@ const Transaction = () => {
   const [remainingSeconds, setRemainingSeconds] = useState(null);
   const [otpSent, setOtpSent] = useState(false);
   const [otpVerified, setOtpVerified] = useState(false);
-
+  const API = process.env.REACT_APP_API_URL;
   const location = useLocation();
 
   useEffect(() => {
@@ -30,6 +30,7 @@ const Transaction = () => {
       }
     };
     checkSession();
+    
     const interval = setInterval(checkSession, 1000);
     return () => clearInterval(interval);
   }, []);
@@ -61,7 +62,7 @@ const Transaction = () => {
   const handleRequestOtp = async () => {
     setError('');
     try {
-      const res = await fetch("http://localhost:8080/bank/request-otp", {
+      const res = await fetch(`${API}/bank/request-otp`, {
         method: 'POST',
         headers,
         body: JSON.stringify({
@@ -81,7 +82,7 @@ const Transaction = () => {
 
   const handleVerifyOtp = async () => {
     try {
-      const res = await fetch("http://localhost:8080/bank/verify-otp", {
+      const res = await fetch(`${API}/bank/verify-otp`, {
         method: 'POST',
         headers,
         body: JSON.stringify({
@@ -114,7 +115,7 @@ const Transaction = () => {
     try {
       if (selectedAction === 'Transaction History') {
         const res = await fetch(
-          `http://localhost:8080/bank/transactions?accountNumber=${input.accountNumber}`,
+          `${API}/bank/transactions?accountNumber=${input.accountNumber}`,
           { headers }
         );
         if (!res.ok) throw new Error("Failed to fetch transactions");
@@ -129,7 +130,7 @@ const Transaction = () => {
       }
 
       const endpoint = selectedAction === 'Withdraw' ? 'withdraw' : 'deposit';
-      const res = await fetch(`http://localhost:8080/bank/${endpoint}`, {
+      const res = await fetch(`${API}/bank/${endpoint}`, {
         method: 'POST',
         headers,
         body: JSON.stringify({

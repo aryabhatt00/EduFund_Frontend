@@ -12,7 +12,7 @@ const DeleteAccount = () => {
   const [accountNumber, setAccountNumber] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
-
+  const API = process.env.REACT_APP_API_URL;
   const handleDelete = async (e) => {
     e.preventDefault();
     setMessage('');
@@ -21,7 +21,7 @@ const DeleteAccount = () => {
     const token = localStorage.getItem("token");
 
     try {
-      const res = await fetch(`http://localhost:8080/admin/account/${accountNumber}`, {
+      const res = await fetch(`${API}/admin/account/${accountNumber}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
