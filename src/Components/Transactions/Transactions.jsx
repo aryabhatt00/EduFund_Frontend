@@ -3,21 +3,33 @@ import { Container, Form, Button, Alert, Dropdown, Table } from 'react-bootstrap
 import { useLocation } from 'react-router-dom';
 import SessionTimer from "../../Components/SessionTimer/SessionTimer";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './Transactions.css'
+import './Transactions.css';
+
 const Transaction = () => {
+  const location = useLocation();
+
+  // Initialize selectedAction from query param on load
+  const params = new URLSearchParams(location.search);
+  const initialType = params.get("type");
+  const [selectedAction, setSelectedAction] = useState(
+    ['Deposit', 'Withdraw', 'Transaction History'].includes(initialType)
+      ? initialType
+      : 'Deposit'
+  );
+
   const [input, setInput] = useState({ accountNumber: '', amount: '', otp: '' });
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
-  const [selectedAction, setSelectedAction] = useState('Deposit');
   const [remainingSeconds, setRemainingSeconds] = useState(null);
   const [otpSent, setOtpSent] = useState(false);
   const [otpVerified, setOtpVerified] = useState(false);
   const API = process.env.REACT_APP_API_URL;
-  const location = useLocation();
 
+  // Session timer
   useEffect(() => {
     const loginTime = localStorage.getItem("customerLoginTime");
     if (!loginTime) return;
+
     const checkSession = () => {
       const elapsed = Math.floor((Date.now() - parseInt(loginTime)) / 1000);
       const remaining = 600 - elapsed;
@@ -29,12 +41,13 @@ const Transaction = () => {
         setRemainingSeconds(remaining);
       }
     };
+
     checkSession();
-    
     const interval = setInterval(checkSession, 1000);
     return () => clearInterval(interval);
   }, []);
 
+  // Update dropdown if query param changes
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const type = params.get("type");
@@ -56,7 +69,7 @@ const Transaction = () => {
   const token = localStorage.getItem('token');
   const headers = {
     'Content-Type': 'application/json',
-    ...(token && { 'Authorization': `Bearer ${token}` })
+    ...(token && { 'Authorization': token }) // Assume Bearer is already included
   };
 
   const handleRequestOtp = async () => {
@@ -95,10 +108,7 @@ const Transaction = () => {
       });
 
       const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || "OTP verification failed");
-      }
+      if (!res.ok) throw new Error(data.message || "OTP verification failed");
 
       setOtpVerified(true);
       setResult(data);
@@ -112,6 +122,7 @@ const Transaction = () => {
     e.preventDefault();
     setError('');
     setResult(null);
+
     try {
       if (selectedAction === 'Transaction History') {
         const res = await fetch(
@@ -149,12 +160,10 @@ const Transaction = () => {
 
   return (
     <Container className="mt-5">
-     {/* Header with inline Session Timer beside Transaction title */}
-<div className="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
-<h3 className="mb-0">Transaction</h3>
-<SessionTimer />
-</div>
-
+      <div className="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+        <h3 className="mb-0">Transaction</h3>
+        <SessionTimer />
+      </div>
 
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3">
@@ -250,41 +259,37 @@ const Transaction = () => {
         </Alert>
       )}
 
-
-{result && selectedAction === 'Transaction History' && (
-  <div className="mt-3">
-    <h5>Account Balance: ${result.accountBalance.toFixed(2)}</h5>
-    <Table striped bordered hover>
-      <thead>
-        <tr>
-          <th>Transaction ID</th>           {/* ✅ Fix label */}
-          <th>Type</th>
-          <th>Amount</th>
-          <th>Date</th>
-          <th>Balance After</th>
-          <th>Account Number</th>
-          <th>Customer Name</th>
-        </tr>
-      </thead>
-      <tbody>
-        {result.transactions.map(txn => (
-          <tr key={txn.accountId}>
-            <td>{txn.transactionId}</td>
-            <td>{txn.transactionType}</td>
-            <td>${txn.transactionAmount.toFixed(2)}</td>
-            <td>{new Date(txn.transactionDate).toLocaleString()}</td>
-            <td>${txn.balanceAfterTransaction.toFixed(2)}</td>
-            <td>{txn.accountNumber}</td>
-            <td>{txn.customerName}</td>
-          </tr>
-        ))}
-      </tbody>
-    </Table>
-  </div>
-)}
-
-
-
+      {result && selectedAction === 'Transaction History' && (
+        <div className="mt-3">
+          <h5>Account Balance: ${result.accountBalance.toFixed(2)}</h5>
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>Transaction ID</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Balance After</th>
+                <th>Account Number</th>
+                <th>Customer Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              {result.transactions.map(txn => (
+                <tr key={txn.accountId}>
+                  <td>{txn.transactionId}</td>
+                  <td>{txn.transactionType}</td>
+                  <td>${txn.transactionAmount.toFixed(2)}</td>
+                  <td>{new Date(txn.transactionDate).toLocaleString()}</td>
+                  <td>${txn.balanceAfterTransaction.toFixed(2)}</td>
+                  <td>{txn.accountNumber}</td>
+                  <td>{txn.customerName}</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </div>
+      )}
 
       {error && <Alert variant="danger" className="mt-3">{error}</Alert>}
     </Container>
