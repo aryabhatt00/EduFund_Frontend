@@ -6,26 +6,17 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './Transactions.css';
 
 const Transaction = () => {
-  const location = useLocation();
-
-  // Initialize selectedAction from query param on load
-  const params = new URLSearchParams(location.search);
-  const initialType = params.get("type");
-  const [selectedAction, setSelectedAction] = useState(
-    ['Deposit', 'Withdraw', 'Transaction History'].includes(initialType)
-      ? initialType
-      : 'Deposit'
-  );
-
   const [input, setInput] = useState({ accountNumber: '', amount: '', otp: '' });
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
+  const [selectedAction, setSelectedAction] = useState('Deposit');
   const [remainingSeconds, setRemainingSeconds] = useState(null);
   const [otpSent, setOtpSent] = useState(false);
   const [otpVerified, setOtpVerified] = useState(false);
   const API = process.env.REACT_APP_API_URL;
+  const location = useLocation();
 
-  // Session timer
+  // Session timer logic
   useEffect(() => {
     const loginTime = localStorage.getItem("customerLoginTime");
     if (!loginTime) return;
@@ -47,7 +38,7 @@ const Transaction = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Update dropdown if query param changes
+  // Detect dropdown selection from query param
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const type = params.get("type");
@@ -69,7 +60,7 @@ const Transaction = () => {
   const token = localStorage.getItem('token');
   const headers = {
     'Content-Type': 'application/json',
-    ...(token && { 'Authorization': token }) // Assume Bearer is already included
+    ...(token && { 'Authorization': token }) // Already has Bearer prefix
   };
 
   const handleRequestOtp = async () => {
