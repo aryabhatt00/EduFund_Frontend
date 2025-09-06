@@ -250,37 +250,38 @@ const Transaction = () => {
         </Alert>
       )}
 
-      {result && selectedAction === 'Transaction History' && (
-        <div className="mt-3">
-          <h5>Account Balance: ${result.accountBalance.toFixed(2)}</h5>
-          <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th>Transaction ID</th>
-                <th>Type</th>
-                <th>Amount</th>
-                <th>Date</th>
-                <th>Balance After</th>
-                <th>Account Number</th>
-                <th>Customer Name</th>
-              </tr>
-            </thead>
-            <tbody>
-              {result.transactions.map(txn => (
-                <tr key={txn.accountId}>
-                  <td>{txn.transactionId}</td>
-                  <td>{txn.transactionType}</td>
-                  <td>${txn.transactionAmount.toFixed(2)}</td>
-                  <td>{new Date(txn.transactionDate).toLocaleString()}</td>
-                  <td>${txn.balanceAfterTransaction.toFixed(2)}</td>
-                  <td>{txn.accountNumber}</td>
-                  <td>{txn.customerName}</td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        </div>
-      )}
+    {result && selectedAction === 'Transaction History' && (
+  <div className="mt-3">
+    <h5>Account Balance: ${result.accountBalance.toFixed(2)}</h5>
+    <Table striped bordered hover>
+      <thead>
+        <tr>
+          <th>Transaction ID</th>
+          <th>Type</th>
+          <th>Amount</th>
+          <th>Date</th>
+          <th>Balance After</th>
+          <th>Account Number</th>
+          <th>Customer Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        {result.transactions.map(txn => (
+          <tr key={txn.transactionId}>
+            <td>{txn.transactionId}</td>
+            <td>{txn.transactionType}</td>
+            <td>${txn.transactionAmount.toFixed(2)}</td>
+            <td>{new Date(txn.transactionDate).toLocaleString()}</td>
+            <td>${txn.balanceAfterTransaction.toFixed(2)}</td>
+            <td>{txn.accountNumber}</td>
+            <td>{txn.customerName}</td>
+          </tr>
+        ))}
+      </tbody>
+    </Table>
+  </div>
+)}
+
 
       {error && <Alert variant="danger" className="mt-3">{error}</Alert>}
     </Container>
