@@ -100,7 +100,7 @@ const Home = () => {
                         <>
                           <Link to="/transactions?type=Deposit" className="btn btn-outline-primary">Deposit</Link>
                           <Link to="/transactions?type=Withdraw" className="btn btn-outline-primary">Withdraw</Link>
-                          <Link to="/transactions" className="btn btn-outline-primary">Transactions</Link>
+                          <Link to="/transactions?type=Transaction%20History" className="btn btn-outline-primary">Transactions</Link>
                           <Link to="/customer/find" className="btn btn-outline-primary">Find Customer</Link>
                           <Button variant="danger" onClick={handleLogout}>Logout</Button>
                         </>

@@ -60,7 +60,7 @@ const Transaction = () => {
   const token = localStorage.getItem('token');
   const headers = {
     'Content-Type': 'application/json',
-    ...(token && { 'Authorization': token }) // Already has Bearer prefix
+    ...(token && { 'Authorization': `Bearer ${token}` }) // Already has Bearer prefix
   };
 
   const handleRequestOtp = async () => {
