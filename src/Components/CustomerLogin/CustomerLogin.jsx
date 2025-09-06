@@ -42,6 +42,7 @@ localStorage.setItem("userRole", "CUSTOMER");
 localStorage.setItem("customerName", data.name);
 localStorage.setItem("customerEmail", data.email);
 localStorage.setItem("customerLoginTime", Date.now().toString());
+localStorage.setItem("isLoggedIn", "true");
 
 
       navigate("/");

@@ -78,6 +78,7 @@ const AppNavbar = () => {
     );
   }
 
+  
   // 👥 Customer or Not Logged In: Show full navbar
   return (
     <Navbar expand="lg" bg="dark" variant="dark" sticky="top" className="app-navbar px-3 shadow-sm">
