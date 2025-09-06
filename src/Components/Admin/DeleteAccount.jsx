@@ -18,7 +18,8 @@ const DeleteAccount = () => {
     setMessage('');
     setError('');
 
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("adminToken");
+
 
     try {
       const res = await fetch(`${API}/admin/account/${accountNumber}`, {

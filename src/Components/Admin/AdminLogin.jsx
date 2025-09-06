@@ -10,16 +10,19 @@ import {
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+
 const AdminLogin = () => {
   const [input, setInput] = useState({ username: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const API = process.env.REACT_APP_API_URL;
+
   const handleChange = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
     setError("");
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -28,13 +31,17 @@ const AdminLogin = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(input),
       });
+
       if (!res.ok) {
         setError("Invalid login");
         return;
       }
+
       const data = await res.json();
       if (data.token) {
-        localStorage.setItem("token", data.token);
+        localStorage.setItem("adminToken", data.token);
+        localStorage.setItem("userRole", "ADMIN");
+        localStorage.setItem("adminLoginTime", Date.now().toString());
         navigate("/admin");
       } else {
         setError("Login failed: Token not found");
@@ -44,6 +51,7 @@ const AdminLogin = () => {
       setError("Server error");
     }
   };
+
   return (
     <div
       style={{
@@ -55,7 +63,6 @@ const AdminLogin = () => {
         padding: "2rem",
       }}
     >
-      {" "}
       <div
         style={{
           display: "flex",
@@ -67,28 +74,21 @@ const AdminLogin = () => {
           maxWidth: "1200px",
         }}
       >
-        {" "}
-        {/* Left Panel - Promo */}{" "}
+        {/* Left Panel - Promo */}
         <div style={{ flex: 1, textAlign: "center" }}>
-          {" "}
           <Typography variant="h4" fontWeight="bold" gutterBottom>
-            {" "}
-            🚀 Welcome, Admin!{" "}
-          </Typography>{" "}
+            🚀 Welcome, Admin!
+          </Typography>
           <Typography variant="h6" sx={{ mb: 2 }}>
-            {" "}
-            Manage everything at one place.{" "}
-          </Typography>{" "}
-          <Typography
-            variant="body1"
-            sx={{ fontSize: "1.1rem", color: "#444" }}
-          >
-            {" "}
+            Manage everything at one place.
+          </Typography>
+          <Typography variant="body1" sx={{ fontSize: "1.1rem", color: "#444" }}>
             🔐 Secure access to user accounts and transactions. <br /> 📊 Full
-            dashboard visibility. <br /> 👩‍💻 Built for speed and efficiency.{" "}
-          </Typography>{" "}
-        </div>{" "}
-        {/* Right Panel - Login Card */}{" "}
+            dashboard visibility. <br /> 👩‍💻 Built for speed and efficiency.
+          </Typography>
+        </div>
+
+        {/* Right Panel - Login Card */}
         <Paper
           elevation={10}
           sx={{
@@ -100,24 +100,18 @@ const AdminLogin = () => {
             boxShadow: "0 8px 20px rgba(0, 0, 0, 0.2)",
           }}
         >
-          {" "}
           <div style={{ textAlign: "center", marginBottom: "1rem" }}>
-            {" "}
-            <AdminPanelSettingsIcon
-              sx={{ fontSize: 50, color: "#0052cc" }}
-            />{" "}
-          </div>{" "}
+            <AdminPanelSettingsIcon sx={{ fontSize: 50, color: "#0052cc" }} />
+          </div>
           <Typography
             variant="h5"
             fontWeight="bold"
             align="center"
             sx={{ mb: 3, color: "#1a1a1a" }}
           >
-            {" "}
-            Admin Login{" "}
-          </Typography>{" "}
+            Admin Login
+          </Typography>
           <form onSubmit={handleSubmit}>
-            {" "}
             <TextField
               label="Username"
               name="username"
@@ -146,7 +140,7 @@ const AdminLogin = () => {
               InputLabelProps={{
                 sx: { color: "#666", "&.Mui-focused": { color: "#0072ff" } },
               }}
-            />{" "}
+            />
             <TextField
               label="Password"
               name="password"
@@ -161,16 +155,14 @@ const AdminLogin = () => {
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    {" "}
                     <IconButton
                       onClick={() => setShowPassword((prev) => !prev)}
                       edge="end"
                       tabIndex={-1}
                       sx={{ color: "#666" }}
                     >
-                      {" "}
-                      {showPassword ? <VisibilityOff /> : <Visibility />}{" "}
-                    </IconButton>{" "}
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
                   </InputAdornment>
                 ),
                 sx: {
@@ -190,16 +182,15 @@ const AdminLogin = () => {
               InputLabelProps={{
                 sx: { color: "#666", "&.Mui-focused": { color: "#0072ff" } },
               }}
-            />{" "}
+            />
             {error && (
               <Typography
                 variant="body2"
                 sx={{ color: "#f44336", mt: 1, textAlign: "center" }}
               >
-                {" "}
-                {error}{" "}
+                {error}
               </Typography>
-            )}{" "}
+            )}
             <Button
               type="submit"
               variant="contained"
@@ -217,25 +208,13 @@ const AdminLogin = () => {
                 "&:hover": { backgroundColor: "#003b99" },
               }}
             >
-              {" "}
-              Sign in{" "}
-            </Button>{" "}
-            <Typography
-              variant="body2"
-              sx={{
-                mt: 2,
-                color: "#0052cc",
-                textAlign: "center",
-                cursor: "pointer",
-                "&:hover": { textDecoration: "underline" },
-              }}
-            >
-
-            </Typography>{" "}
-          </form>{" "}
-        </Paper>{" "}
-      </div>{" "}
+              Sign in
+            </Button>
+          </form>
+        </Paper>
+      </div>
     </div>
   );
 };
+
 export default AdminLogin;

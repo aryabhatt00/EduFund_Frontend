@@ -37,12 +37,12 @@ const CustomerLogin = () => {
 
       const data = await res.json();
 
-      localStorage.setItem("customerToken", data.token);
-      localStorage.setItem("customerName", data.name);
-      localStorage.setItem("customerEmail", data.email);
-      localStorage.setItem("isLoggedIn", "true");
-      localStorage.setItem("customerLoginTime", Date.now().toString());
-      window.dispatchEvent(new Event("storage"));
+localStorage.setItem("customerToken", data.token);
+localStorage.setItem("userRole", "CUSTOMER");
+localStorage.setItem("customerName", data.name);
+localStorage.setItem("customerEmail", data.email);
+localStorage.setItem("customerLoginTime", Date.now().toString());
+
 
       navigate("/");
     } catch (err) {

@@ -10,16 +10,19 @@ const Admin = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const API = process.env.REACT_APP_API_URL;
-  useEffect(() => {
-    const token = localStorage.getItem("token");
 
-    if (!token) {
-      navigate("/"); // Redirect to login if token is missing
+  useEffect(() => {
+    const userRole = localStorage.getItem("userRole");
+    const adminToken = localStorage.getItem("adminToken");
+
+    if (userRole !== "ADMIN" || !adminToken) {
+      alert("Unauthorized access. Admin login required.");
+      navigate("/");
       return;
     }
 
     const headers = {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${adminToken}`,
     };
 
     Promise.all([
@@ -121,26 +124,26 @@ const Admin = () => {
           <Table striped bordered hover responsive>
             <thead style={{ backgroundColor: "#e9f0fb" }}>
               <tr>
-    <th>ID</th>
-    <th>Type</th>
-    <th>Amount</th>
-    <th>Balance After</th>
-    <th>Date</th>
-    <th>Account Number</th>
-    <th>Customer Name</th>
-  </tr>
-</thead>
-<tbody>
-  {transactions.map(t => (
-    <tr key={t.transactionId}>
-      <td>{t.transactionId}</td>
-      <td>{t.transactionType}</td>
-      <td>${t.transactionAmount.toFixed(2)}</td>
-      <td>${t.balanceAfterTransaction.toFixed(2)}</td>
-      <td>{new Date(t.transactionDate).toLocaleString()}</td>
-      <td>{t.accountNumber}</td>
-      <td>{t.customerName}</td>
-    </tr>
+                <th>ID</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Balance After</th>
+                <th>Date</th>
+                <th>Account Number</th>
+                <th>Customer Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              {transactions.map(t => (
+                <tr key={t.transactionId}>
+                  <td>{t.transactionId}</td>
+                  <td>{t.transactionType}</td>
+                  <td>${t.transactionAmount.toFixed(2)}</td>
+                  <td>${t.balanceAfterTransaction.toFixed(2)}</td>
+                  <td>{new Date(t.transactionDate).toLocaleString()}</td>
+                  <td>{t.accountNumber}</td>
+                  <td>{t.customerName}</td>
+                </tr>
               ))}
             </tbody>
           </Table>

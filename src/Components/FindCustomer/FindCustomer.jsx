@@ -14,7 +14,7 @@ const FindCustomer = () => {
     e.preventDefault();
     setError('');
     setResult(null);
-    const token = localStorage.getItem("token"); 
+
 
     try {
       const res = await fetch(`${API}/customer/find`, {
