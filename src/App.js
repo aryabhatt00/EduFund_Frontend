@@ -1,5 +1,6 @@
+// App.jsx
 import React from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import Navbar from './Components/Navbar/Navbar';
 import Home from './Components/Home/Home';
 import FindCustomer from './Components/FindCustomer/FindCustomer';
@@ -13,23 +14,62 @@ import DeleteAccount from './Components/Admin/DeleteAccount';
 function App() {
   const location = useLocation();
 
-  // ✅ Hide navbar only on home and admin login page
- const hideNavbar =
-  location.pathname === "/" || location.pathname.startsWith("/admin");
+  const isAdmin = !!localStorage.getItem("adminToken");
+  const isCustomer = !!localStorage.getItem("customerToken");
 
+  // ✅ Only hide navbar on admin login and root page
+  const hideNavbar =
+    location.pathname === "/admin/login" || location.pathname === "/";
 
   return (
     <div>
       {!hideNavbar && <Navbar />}
+
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/customer/create" element={<CreateCustomer />} />
-        <Route path="/transactions" element={<Transaction />} />
-        <Route path="/customer/find" element={<FindCustomer />} />
-        <Route path="/admin" element={<Admin />} />
+        {/* 🔄 Redirect root based on role */}
+        <Route
+          path="/"
+          element={
+            isAdmin ? (
+              <Navigate to="/admin" replace />
+            ) : isCustomer ? (
+              <Home />
+            ) : (
+              <CustomerLogin />
+            )
+          }
+        />
+
+        {/* 👤 Customer-only routes */}
+        <Route
+          path="/customer/create"
+          element={isCustomer ? <CreateCustomer /> : <Navigate to="/customer/login" />}
+        />
+        <Route
+          path="/transactions"
+          element={isCustomer ? <Transaction /> : <Navigate to="/customer/login" />}
+        />
+        <Route
+          path="/customer/find"
+          element={isCustomer ? <FindCustomer /> : <Navigate to="/customer/login" />}
+        />
+
+        {/* 🧑‍💼 Admin-only routes */}
+        <Route
+          path="/admin"
+          element={isAdmin ? <Admin /> : <Navigate to="/admin/login" />}
+        />
+        <Route
+          path="/admin/delete-account"
+          element={isAdmin ? <DeleteAccount /> : <Navigate to="/admin/login" />}
+        />
+
+        {/* 🔐 Auth routes */}
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/customer/login" element={<CustomerLogin />} />
-        <Route path="/admin/delete-account" element={<DeleteAccount />} />
+
+        {/* 🔄 Catch all */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
   );
