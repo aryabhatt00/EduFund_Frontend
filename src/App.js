@@ -1,4 +1,3 @@
-// App.jsx
 import React from 'react';
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import Navbar from './Components/Navbar/Navbar';
@@ -17,30 +16,28 @@ function App() {
   const isAdmin = !!localStorage.getItem("adminToken");
   const isCustomer = !!localStorage.getItem("customerToken");
 
-  // ✅ Only hide navbar on admin login and root page
-  const hideNavbar =
-    location.pathname === "/admin/login" || location.pathname === "/";
+  // ✅ Hide navbar only on "/" (home) and admin login
+  const hideNavbar = location.pathname === "/" || location.pathname === "/admin/login";
 
   return (
     <div>
       {!hideNavbar && <Navbar />}
 
       <Routes>
-        {/* 🔄 Redirect root based on role */}
         <Route
           path="/"
           element={
             isAdmin ? (
               <Navigate to="/admin" replace />
             ) : isCustomer ? (
-              <Home />
+              <Navigate to="/transactions" replace />
             ) : (
-              <CustomerLogin />
+              <Home />
             )
           }
         />
 
-        {/* 👤 Customer-only routes */}
+        {/* Customer Routes */}
         <Route
           path="/customer/create"
           element={isCustomer ? <CreateCustomer /> : <Navigate to="/customer/login" />}
@@ -53,8 +50,10 @@ function App() {
           path="/customer/find"
           element={isCustomer ? <FindCustomer /> : <Navigate to="/customer/login" />}
         />
+        <Route path="/customer/login" element={<CustomerLogin />} />
 
-        {/* 🧑‍💼 Admin-only routes */}
+        {/* Admin Routes */}
+        <Route path="/admin/login" element={<AdminLogin />} />
         <Route
           path="/admin"
           element={isAdmin ? <Admin /> : <Navigate to="/admin/login" />}
@@ -64,11 +63,7 @@ function App() {
           element={isAdmin ? <DeleteAccount /> : <Navigate to="/admin/login" />}
         />
 
-        {/* 🔐 Auth routes */}
-        <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/customer/login" element={<CustomerLogin />} />
-
-        {/* 🔄 Catch all */}
+        {/* Catch All */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
