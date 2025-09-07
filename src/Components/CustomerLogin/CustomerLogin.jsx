@@ -17,6 +17,7 @@ const CustomerLogin = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const API = process.env.REACT_APP_API_URL;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -37,13 +38,18 @@ const CustomerLogin = () => {
 
       const data = await res.json();
 
-localStorage.setItem("customerToken", data.token);
-localStorage.setItem("userRole", "CUSTOMER");
-localStorage.setItem("customerName", data.name);
-localStorage.setItem("customerEmail", data.email);
-localStorage.setItem("customerLoginTime", Date.now().toString());
-localStorage.setItem("isLoggedIn", "true");
+      // 🧼 Clear admin session before setting customer
+      localStorage.removeItem("adminToken");
+      localStorage.removeItem("adminLoginTime");
+      localStorage.removeItem("userRole");
 
+      // ✅ Set customer session
+      localStorage.setItem("customerToken", data.token);
+      localStorage.setItem("userRole", "CUSTOMER");
+      localStorage.setItem("customerName", data.name);
+      localStorage.setItem("customerEmail", data.email);
+      localStorage.setItem("customerLoginTime", Date.now().toString());
+      localStorage.setItem("isLoggedIn", "true");
 
       navigate("/");
     } catch (err) {
@@ -74,8 +80,8 @@ localStorage.setItem("isLoggedIn", "true");
           maxWidth: "1200px",
         }}
       >
-        {/* Left Panel - Promo */}
-        <div style={{ flex: 1, textAlign: "center" }}>  
+        {/* Left Panel */}
+        <div style={{ flex: 1, textAlign: "center" }}>
           <Typography variant="h4" fontWeight="bold" gutterBottom>
             🏦 Welcome to EduFund!
           </Typography>
@@ -83,12 +89,11 @@ localStorage.setItem("isLoggedIn", "true");
             Open a $0 account in under 2 minutes!
           </Typography>
           <Typography variant="body1" sx={{ fontSize: "1.1rem", color: "#444" }}>
-            
             🔐 AI-secured. Instant activation.
           </Typography>
         </div>
 
-        {/* Right Panel - Login Card */}
+        {/* Right Panel */}
         <Paper
           elevation={10}
           sx={{
@@ -124,21 +129,6 @@ localStorage.setItem("isLoggedIn", "true");
                 sx: {
                   backgroundColor: "#ffffff",
                   borderRadius: "6px",
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#d0d0d0",
-                  },
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#0072ff",
-                  },
-                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#0072ff",
-                  },
-                },
-              }}
-              InputLabelProps={{
-                sx: {
-                  color: "#666",
-                  "&.Mui-focused": { color: "#0072ff" },
                 },
               }}
             />
@@ -169,21 +159,6 @@ localStorage.setItem("isLoggedIn", "true");
                 sx: {
                   backgroundColor: "#ffffff",
                   borderRadius: "6px",
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#d0d0d0",
-                  },
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#0072ff",
-                  },
-                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#0072ff",
-                  },
-                },
-              }}
-              InputLabelProps={{
-                sx: {
-                  color: "#666",
-                  "&.Mui-focused": { color: "#0072ff" },
                 },
               }}
             />
@@ -208,12 +183,6 @@ localStorage.setItem("isLoggedIn", "true");
                 color: "#fff",
                 backgroundColor: "#0052cc",
                 borderRadius: "30px",
-                textTransform: "none",
-                fontSize: "1rem",
-                boxShadow: "0 4px 12px rgba(0, 82, 204, 0.3)",
-                "&:hover": {
-                  backgroundColor: "#003b99",
-                },
               }}
             >
               Sign in

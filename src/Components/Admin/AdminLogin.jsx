@@ -39,9 +39,19 @@ const AdminLogin = () => {
 
       const data = await res.json();
       if (data.token) {
+        // 🧼 Clear customer session before setting admin
+        localStorage.removeItem("customerToken");
+        localStorage.removeItem("customerName");
+        localStorage.removeItem("customerEmail");
+        localStorage.removeItem("customerLoginTime");
+        localStorage.removeItem("isLoggedIn");
+        localStorage.removeItem("userRole");
+
+        // ✅ Set admin session
         localStorage.setItem("adminToken", data.token);
         localStorage.setItem("userRole", "ADMIN");
         localStorage.setItem("adminLoginTime", Date.now().toString());
+
         navigate("/admin");
       } else {
         setError("Login failed: Token not found");
@@ -83,8 +93,9 @@ const AdminLogin = () => {
             Manage everything at one place.
           </Typography>
           <Typography variant="body1" sx={{ fontSize: "1.1rem", color: "#444" }}>
-            🔐 Secure access to user accounts and transactions. <br /> 📊 Full
-            dashboard visibility. <br /> 👩‍💻 Built for speed and efficiency.
+            🔐 Secure access to user accounts and transactions.
+            <br /> 📊 Full dashboard visibility.
+            <br /> 👩‍💻 Built for speed and efficiency.
           </Typography>
         </div>
 
@@ -122,24 +133,6 @@ const AdminLogin = () => {
               autoComplete="username"
               margin="normal"
               variant="outlined"
-              InputProps={{
-                sx: {
-                  backgroundColor: "#ffffff",
-                  borderRadius: "6px",
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#d0d0d0",
-                  },
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#0072ff",
-                  },
-                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#0072ff",
-                  },
-                },
-              }}
-              InputLabelProps={{
-                sx: { color: "#666", "&.Mui-focused": { color: "#0072ff" } },
-              }}
             />
             <TextField
               label="Password"
@@ -159,28 +152,11 @@ const AdminLogin = () => {
                       onClick={() => setShowPassword((prev) => !prev)}
                       edge="end"
                       tabIndex={-1}
-                      sx={{ color: "#666" }}
                     >
                       {showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
                   </InputAdornment>
                 ),
-                sx: {
-                  backgroundColor: "#ffffff",
-                  borderRadius: "6px",
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#d0d0d0",
-                  },
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#0072ff",
-                  },
-                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#0072ff",
-                  },
-                },
-              }}
-              InputLabelProps={{
-                sx: { color: "#666", "&.Mui-focused": { color: "#0072ff" } },
               }}
             />
             {error && (
@@ -202,10 +178,6 @@ const AdminLogin = () => {
                 color: "#fff",
                 backgroundColor: "#0052cc",
                 borderRadius: "30px",
-                textTransform: "none",
-                fontSize: "1rem",
-                boxShadow: "0 4px 12px rgba(0, 82, 204, 0.3)",
-                "&:hover": { backgroundColor: "#003b99" },
               }}
             >
               Sign in
