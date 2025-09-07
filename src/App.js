@@ -12,39 +12,29 @@ import DeleteAccount from './Components/Admin/DeleteAccount';
 
 function App() {
   const location = useLocation();
-
   const isAdmin = !!localStorage.getItem("adminToken");
   const isCustomer = !!localStorage.getItem("customerToken");
 
-  // ❌ Hide Navbar for admin routes and root login page
   const hideNavbar =
-    location.pathname === "/admin/login" ||
-    location.pathname === "/" ||
-    isAdmin;
+    location.pathname === "/admin/login" || location.pathname === "/";
 
   return (
     <div>
       {!hideNavbar && <Navbar />}
 
       <Routes>
-        {/* ✅ Home Page: Show login + register when not logged in */}
+        {/* ✅ FIXED: Show Home always unless admin */}
         <Route
           path="/"
           element={
-            isAdmin ? (
-              <Navigate to="/admin" replace />
-            ) : isCustomer ? (
-              <Home />
-            ) : (
-              <Home />
-            )
+            isAdmin ? <Navigate to="/admin" replace /> : <Home />
           }
         />
 
         {/* 👤 Customer-only routes */}
         <Route
           path="/customer/create"
-          element={isCustomer ? <CreateCustomer /> : <Navigate to="/customer/login" />}
+          element={isCustomer ? <CreateCustomer /> : <Home />}
         />
         <Route
           path="/transactions"
@@ -65,11 +55,11 @@ function App() {
           element={isAdmin ? <DeleteAccount /> : <Navigate to="/admin/login" />}
         />
 
-        {/* 🔐 Login Routes */}
+        {/* 🔐 Auth routes */}
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/customer/login" element={<CustomerLogin />} />
 
-        {/* 🔄 Fallback */}
+        {/* Catch All */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
