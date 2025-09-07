@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
 import { FaUserCircle } from "react-icons/fa";
 import "./Navbar.css";
@@ -7,6 +7,7 @@ import "./Navbar.css";
 const AppNavbar = () => {
   const [role, setRole] = useState(null); // 'admin' | 'customer' | null
   const navigate = useNavigate();
+  const location = useLocation(); // 🔥 This triggers effect on route change
 
   useEffect(() => {
     const checkLogin = () => {
@@ -22,10 +23,8 @@ const AppNavbar = () => {
       }
     };
 
-    checkLogin(); // On load
-    window.addEventListener("storage", checkLogin); // Cross-tab sync
-    return () => window.removeEventListener("storage", checkLogin);
-  }, []);
+    checkLogin(); // On load + route change
+  }, [location]); // 🔥 re-check on every route change
 
   const handleLogout = () => {
     if (role === "customer") {
@@ -37,7 +36,6 @@ const AppNavbar = () => {
     }
     localStorage.removeItem("isLoggedIn");
     setRole(null);
-    window.dispatchEvent(new Event("storage"));
     navigate("/");
   };
 
@@ -48,9 +46,6 @@ const AppNavbar = () => {
     return null;
   }
 
-  // 🔁 EduFund logo route based on login state
-  const logoLink = "/";
-
   return (
     <Navbar
       expand="lg"
@@ -60,14 +55,13 @@ const AppNavbar = () => {
       className="app-navbar px-3 shadow-sm"
     >
       <Container fluid>
-        <Navbar.Brand as={Link} to={logoLink} className="navbar-brand-glow">
+        <Navbar.Brand as={Link} to="/" className="navbar-brand-glow">
           💡EduFund
         </Navbar.Brand>
 
         <Navbar.Toggle aria-controls="main-navbar-nav" />
         <Navbar.Collapse id="main-navbar-nav">
           <Nav className="ms-auto align-items-center gap-3">
-            {/* 👤 Customer View */}
             {role === "customer" && (
               <>
                 <Nav.Link as={Link} to="/transactions?type=Deposit">
@@ -76,10 +70,7 @@ const AppNavbar = () => {
                 <Nav.Link as={Link} to="/transactions?type=Withdraw">
                   Withdraw
                 </Nav.Link>
-                <Nav.Link
-                  as={Link}
-                  to="/transactions?type=Transaction%20History"
-                >
+                <Nav.Link as={Link} to="/transactions?type=Transaction%20History">
                   Transactions
                 </Nav.Link>
                 <NavDropdown
@@ -99,7 +90,6 @@ const AppNavbar = () => {
               </>
             )}
 
-            {/* ❌ Not Logged In */}
             {!role && (
               <>
                 <Nav.Link as={Link} to="/customer/create">
