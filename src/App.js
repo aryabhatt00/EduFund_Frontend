@@ -16,28 +16,32 @@ function App() {
   const isAdmin = !!localStorage.getItem("adminToken");
   const isCustomer = !!localStorage.getItem("customerToken");
 
-  // ✅ Hide navbar only on "/" (home) and admin login
-  const hideNavbar = location.pathname === "/" || location.pathname === "/admin/login";
+  // ❌ Hide Navbar for admin routes and root login page
+  const hideNavbar =
+    location.pathname === "/admin/login" ||
+    location.pathname === "/" ||
+    isAdmin;
 
   return (
     <div>
       {!hideNavbar && <Navbar />}
 
       <Routes>
+        {/* ✅ Home Page: Show login + register when not logged in */}
         <Route
           path="/"
           element={
             isAdmin ? (
               <Navigate to="/admin" replace />
             ) : isCustomer ? (
-              <Navigate to="/transactions" replace />
+              <Home />
             ) : (
               <Home />
             )
           }
         />
 
-        {/* Customer Routes */}
+        {/* 👤 Customer-only routes */}
         <Route
           path="/customer/create"
           element={isCustomer ? <CreateCustomer /> : <Navigate to="/customer/login" />}
@@ -50,10 +54,8 @@ function App() {
           path="/customer/find"
           element={isCustomer ? <FindCustomer /> : <Navigate to="/customer/login" />}
         />
-        <Route path="/customer/login" element={<CustomerLogin />} />
 
-        {/* Admin Routes */}
-        <Route path="/admin/login" element={<AdminLogin />} />
+        {/* 🧑‍💼 Admin-only routes */}
         <Route
           path="/admin"
           element={isAdmin ? <Admin /> : <Navigate to="/admin/login" />}
@@ -63,7 +65,11 @@ function App() {
           element={isAdmin ? <DeleteAccount /> : <Navigate to="/admin/login" />}
         />
 
-        {/* Catch All */}
+        {/* 🔐 Login Routes */}
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/customer/login" element={<CustomerLogin />} />
+
+        {/* 🔄 Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
