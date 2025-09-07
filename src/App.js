@@ -9,58 +9,76 @@ import Admin from './Components/Admin/Admin';
 import AdminLogin from './Components/Admin/AdminLogin';
 import CustomerLogin from './Components/CustomerLogin/CustomerLogin';
 import DeleteAccount from './Components/Admin/DeleteAccount';
+import CreateAccount from './Components/CreateAccount/CreateAccount';
 
 function App() {
   const location = useLocation();
-  const isAdmin = !!localStorage.getItem("adminToken");
-  const isCustomer = !!localStorage.getItem("customerToken");
 
+  const isAdminLoggedIn = !!localStorage.getItem("adminToken");
+  const isCustomerLoggedIn = !!localStorage.getItem("customerToken");
+
+  // ❌ Hide Navbar only for admin routes when admin is logged in
   const hideNavbar =
-    location.pathname === "/admin/login" || location.pathname === "/";
+    isAdminLoggedIn &&
+    ["/admin", "/admin/login", "/admin/delete-account"].some((path) =>
+      location.pathname.startsWith(path)
+    );
 
   return (
     <div>
       {!hideNavbar && <Navbar />}
 
       <Routes>
-        {/* ✅ FIXED: Show Home always unless admin */}
+        {/* PUBLIC LANDING PAGE */}
+        <Route path="/" element={<Home />} />
+
+        {/* PUBLIC + CUSTOMER ROUTES */}
         <Route
-          path="/"
+          path="/customer/create"
           element={
-            isAdmin ? <Navigate to="/admin" replace /> : <Home />
+            isAdminLoggedIn ? (
+              <Navigate to="/" replace />
+            ) : (
+              <CreateCustomer />
+            )
+          }
+        />
+        <Route path="/account/create" element={<CreateAccount />} />
+        <Route path="/customer/find" element={<FindCustomer />} />
+        <Route path="/customer/login" element={<CustomerLogin />} />
+        <Route
+          path="/transactions"
+          element={
+            isCustomerLoggedIn ? (
+              <Transaction />
+            ) : (
+              <Navigate to="/customer/login" />
+            )
           }
         />
 
-        {/* 👤 Customer-only routes */}
-        <Route
-          path="/customer/create"
-          element={isCustomer ? <CreateCustomer /> : <Home />}
-        />
-        <Route
-          path="/transactions"
-          element={isCustomer ? <Transaction /> : <Navigate to="/customer/login" />}
-        />
-        <Route
-          path="/customer/find"
-          element={isCustomer ? <FindCustomer /> : <Navigate to="/customer/login" />}
-        />
-
-        {/* 🧑‍💼 Admin-only routes */}
+        {/* ADMIN ROUTES */}
+        <Route path="/admin/login" element={<AdminLogin />} />
         <Route
           path="/admin"
-          element={isAdmin ? <Admin /> : <Navigate to="/admin/login" />}
+          element={
+            isAdminLoggedIn ? (
+              <Admin />
+            ) : (
+              <Navigate to="/admin/login" />
+            )
+          }
         />
         <Route
           path="/admin/delete-account"
-          element={isAdmin ? <DeleteAccount /> : <Navigate to="/admin/login" />}
+          element={
+            isAdminLoggedIn ? (
+              <DeleteAccount />
+            ) : (
+              <Navigate to="/admin/login" />
+            )
+          }
         />
-
-        {/* 🔐 Auth routes */}
-        <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/customer/login" element={<CustomerLogin />} />
-
-        {/* Catch All */}
-        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
   );
