@@ -54,24 +54,46 @@ const Admin = () => {
 
   return (
     <Container className="mt-4">
-      <Card className="shadow-sm p-4 mb-4" style={{ backgroundColor: '#f4f9ff', borderRadius: '12px' }}>
-        <div className="d-flex justify-content-between align-items-center">
-          <h3 className="fw-bold" style={{ color: '#003b99' }}>Welcome, Admin 👨‍💼</h3>
-          <Button
-            variant="primary"
-            onClick={() => navigate("/admin/delete-account")}
-            style={{
-              backgroundColor: "#0052cc",
-              border: "none",
-              borderRadius: "20px",
-              padding: "8px 18px",
-              fontWeight: "bold"
-            }}
-          >
-            Delete Account
-          </Button>
-        </div>
-      </Card>
+<Card className="shadow-sm p-4 mb-4" style={{ backgroundColor: '#f4f9ff', borderRadius: '12px' }}>
+  <div className="d-flex justify-content-between align-items-center">
+    <h3 className="fw-bold" style={{ color: '#003b99' }}>Welcome, Admin 👨‍💼</h3>
+
+    {/* ✅ Buttons: Logout + Delete Account */}
+    <div className="d-flex gap-3">
+      <Button
+        variant="outline-danger"
+        onClick={() => {
+          localStorage.removeItem("adminToken");
+          localStorage.removeItem("userRole");
+          localStorage.removeItem("adminLoginTime");
+          window.location.href = "/"; // go back to home
+        }}
+        style={{
+          borderRadius: "20px",
+          padding: "8px 18px",
+          fontWeight: "bold"
+        }}
+      >
+        Logout
+      </Button>
+
+      <Button
+        variant="primary"
+        onClick={() => navigate("/admin/delete-account")}
+        style={{
+          backgroundColor: "#0052cc",
+          border: "none",
+          borderRadius: "20px",
+          padding: "8px 18px",
+          fontWeight: "bold"
+        }}
+      >
+        Delete Account
+      </Button>
+    </div>
+  </div>
+</Card>
+
 
       <Tabs defaultActiveKey="customers" className="mb-3" fill>
         <Tab eventKey="customers" title="👤 Customers">
