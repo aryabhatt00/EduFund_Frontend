@@ -32,8 +32,9 @@ const AppNavbar = () => {
       localStorage.removeItem("customerToken");
       localStorage.removeItem("customerName");
       localStorage.removeItem("customerEmail");
+    } else if (role === "admin") {
+      localStorage.removeItem("adminToken");
     }
-
     localStorage.removeItem("isLoggedIn");
     setRole(null);
     window.dispatchEvent(new Event("storage"));
@@ -48,7 +49,7 @@ const AppNavbar = () => {
   }
 
   // 🔁 EduFund logo route based on login state
-  const logoLink = role === "customer" ? "/" : "/";
+  const logoLink = "/";
 
   return (
     <Navbar
@@ -75,7 +76,10 @@ const AppNavbar = () => {
                 <Nav.Link as={Link} to="/transactions?type=Withdraw">
                   Withdraw
                 </Nav.Link>
-                <Nav.Link as={Link} to="/transactions?type=Transaction%20History">
+                <Nav.Link
+                  as={Link}
+                  to="/transactions?type=Transaction%20History"
+                >
                   Transactions
                 </Nav.Link>
                 <NavDropdown
