@@ -1,4 +1,3 @@
-// src/components/AppNavbar.jsx
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
@@ -6,9 +5,9 @@ import { FaUserCircle } from "react-icons/fa";
 import "./Navbar.css";
 
 const AppNavbar = () => {
-  const [role, setRole] = useState(null); // 'admin' | 'customer' | null
+  const [role, setRole] = useState(null);
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     const checkLogin = () => {
       const isAdmin = !!localStorage.getItem("adminToken");
@@ -23,8 +22,8 @@ const AppNavbar = () => {
       }
     };
 
-    checkLogin(); // On load
-    window.addEventListener("storage", checkLogin); // For cross-tab sync
+    checkLogin();
+    window.addEventListener("storage", checkLogin);
     return () => window.removeEventListener("storage", checkLogin);
   }, []);
 
@@ -48,38 +47,8 @@ const AppNavbar = () => {
       ? "Admin"
       : localStorage.getItem("customerName") || "Customer";
 
-  // ✅ Admin: Only show logout button — no brand, no nav links
-  if (role === "admin") {
-    return (
-      <div
-        style={{
-          background: "#0e1f2b",
-          padding: "10px 20px",
-          display: "flex",
-          justifyContent: "flex-end",
-          alignItems: "center",
-        }}
-      >
-        <span
-          onClick={handleLogout}
-          style={{
-            cursor: "pointer",
-            color: "white",
-            fontWeight: "bold",
-            fontSize: "1rem",
-            background: "#e53935",
-            padding: "6px 18px",
-            borderRadius: "30px",
-          }}
-        >
-          Logout
-        </span>
-      </div>
-    );
-  }
-
-  
-  // 👥 Customer or Not Logged In: Show full navbar
+  // ❌ Admin — no navbar shown at all (handled from App.jsx)
+  // ✅ Full navbar below
   return (
     <Navbar expand="lg" bg="dark" variant="dark" sticky="top" className="app-navbar px-3 shadow-sm">
       <Container fluid>
@@ -91,7 +60,6 @@ const AppNavbar = () => {
         <Navbar.Collapse id="main-navbar-nav">
           <Nav className="ms-auto align-items-center gap-3">
 
-            {/* 👤 Customer View */}
             {role === "customer" && (
               <>
                 <Nav.Link as={Link} to="/transactions?type=Deposit">Deposit</Nav.Link>
@@ -112,7 +80,6 @@ const AppNavbar = () => {
               </>
             )}
 
-            {/* ❌ Not Logged In */}
             {!role && (
               <>
                 <Nav.Link as={Link} to="/customer/create">Create Account</Nav.Link>
@@ -120,7 +87,6 @@ const AppNavbar = () => {
                 <Nav.Link as={Link} to="/admin/login">Admin Login</Nav.Link>
               </>
             )}
-
           </Nav>
         </Navbar.Collapse>
       </Container>
