@@ -54,12 +54,15 @@ const Home = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const handleLogout = () => {
-    localStorage.clear();
-    setIsLoggedIn(false);
-    window.dispatchEvent(new Event("storage"));
-    navigate("/customer/login");
-  };
+const handleLogout = () => {
+  localStorage.clear();
+  localStorage.setItem("isLoggedIn", "false"); // ✅ FIXED
+
+  setIsLoggedIn(false);
+  window.dispatchEvent(new Event("storage")); // Update Navbar and others
+  navigate("/customer/login");
+};
+
 
   return (
     <>

@@ -34,22 +34,25 @@ const AppNavbar = () => {
   }, []);
 
   // ✅ Force refresh when logout is clicked
-  const handleLogout = () => {
-    if (role === "customer") {
-      localStorage.removeItem("customerToken");
-      localStorage.removeItem("customerName");
-      localStorage.removeItem("customerEmail");
-    } else if (role === "admin") {
-      localStorage.removeItem("adminToken");
-    }
-    localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("userRole");
+const handleLogout = () => {
+  if (role === "customer") {
+    localStorage.removeItem("customerToken");
+    localStorage.removeItem("customerName");
+    localStorage.removeItem("customerEmail");
+    localStorage.removeItem("customerLoginTime");
+    localStorage.removeItem("accountNumber");
+  } else if (role === "admin") {
+    localStorage.removeItem("adminToken");
+  }
 
-    // ✅ Force Navbar recheck
-    setRole(null);
-    navigate("/");
-    checkLogin(); // ✅ Manual trigger in same tab
-  };
+  localStorage.setItem("isLoggedIn", "false"); // ✅ FIXED
+  localStorage.removeItem("userRole");
+
+  setRole(null); // Refresh navbar state
+  navigate("/");
+  checkLogin(); // Force re-evaluation
+  window.dispatchEvent(new Event("storage")); // Force other tabs/components to sync
+};
 
   const userName = localStorage.getItem("customerName") || "Customer";
 
