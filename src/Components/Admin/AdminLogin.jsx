@@ -6,6 +6,7 @@ import {
   Paper,
   TextField,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +18,7 @@ const AdminLogin = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const API = process.env.REACT_APP_API_URL;
+  const isMobile = useMediaQuery("(max-width:768px)");
 
   const handleChange = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
@@ -39,7 +41,6 @@ const AdminLogin = () => {
 
       const data = await res.json();
       if (data.token) {
-        // 🧼 Clear customer session before setting admin
         localStorage.removeItem("customerToken");
         localStorage.removeItem("customerName");
         localStorage.removeItem("customerEmail");
@@ -47,7 +48,6 @@ const AdminLogin = () => {
         localStorage.removeItem("isLoggedIn");
         localStorage.removeItem("userRole");
 
-        // ✅ Set admin session
         localStorage.setItem("adminToken", data.token);
         localStorage.setItem("userRole", "ADMIN");
         localStorage.setItem("adminLoginTime", Date.now().toString());
@@ -76,15 +76,15 @@ const AdminLogin = () => {
       <div
         style={{
           display: "flex",
-          flexDirection: "row",
-          gap: "4rem",
+          flexDirection: isMobile ? "column" : "row",
+          gap: "2rem",
           alignItems: "center",
           justifyContent: "center",
           width: "100%",
           maxWidth: "1200px",
         }}
       >
-        {/* Left Panel - Promo */}
+        {/* Left Panel */}
         <div style={{ flex: 1, textAlign: "center" }}>
           <Typography variant="h4" fontWeight="bold" gutterBottom>
             🚀 Welcome, Admin!
@@ -133,6 +133,12 @@ const AdminLogin = () => {
               autoComplete="username"
               margin="normal"
               variant="outlined"
+              InputProps={{
+                sx: {
+                  backgroundColor: "#ffffff",
+                  borderRadius: "6px",
+                },
+              }}
             />
             <TextField
               label="Password"
@@ -152,11 +158,16 @@ const AdminLogin = () => {
                       onClick={() => setShowPassword((prev) => !prev)}
                       edge="end"
                       tabIndex={-1}
+                      sx={{ color: "#666" }}
                     >
                       {showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
                   </InputAdornment>
                 ),
+                sx: {
+                  backgroundColor: "#ffffff",
+                  borderRadius: "6px",
+                },
               }}
             />
             {error && (

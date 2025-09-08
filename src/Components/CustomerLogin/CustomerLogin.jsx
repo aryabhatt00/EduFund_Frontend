@@ -6,6 +6,7 @@ import {
   IconButton,
   InputAdornment,
   Paper,
+  useMediaQuery,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
@@ -17,17 +18,15 @@ const CustomerLogin = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const API = process.env.REACT_APP_API_URL;
+  const isMobile = useMediaQuery("(max-width:768px)");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-
     try {
       const res = await fetch(`${API}/customer/login`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
@@ -37,13 +36,10 @@ const CustomerLogin = () => {
       }
 
       const data = await res.json();
-
-      // 🧼 Clear admin session before setting customer
       localStorage.removeItem("adminToken");
       localStorage.removeItem("adminLoginTime");
       localStorage.removeItem("userRole");
 
-      // ✅ Set customer session
       localStorage.setItem("customerToken", data.token);
       localStorage.setItem("userRole", "CUSTOMER");
       localStorage.setItem("customerName", data.name);
@@ -72,8 +68,8 @@ const CustomerLogin = () => {
       <div
         style={{
           display: "flex",
-          flexDirection: "row",
-          gap: "4rem",
+          flexDirection: isMobile ? "column" : "row",
+          gap: "2rem",
           alignItems: "center",
           justifyContent: "center",
           width: "100%",
