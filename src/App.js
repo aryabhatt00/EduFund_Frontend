@@ -10,6 +10,7 @@ import AdminLogin from './Components/Admin/AdminLogin';
 import CustomerLogin from './Components/CustomerLogin/CustomerLogin';
 import DeleteAccount from './Components/Admin/DeleteAccount';
 import CreateAccount from './Components/CreateAccount/CreateAccount';
+import { Analytics } from '@vercel/analytics/react'; // ✅ NEW IMPORT
 
 function App() {
   const location = useLocation();
@@ -80,6 +81,8 @@ function App() {
           }
         />
       </Routes>
+
+      <Analytics /> {/* ✅ Add Analytics tracking at the end */}
     </div>
   );
 }
