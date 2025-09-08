@@ -5,27 +5,35 @@ import { FaUserCircle } from "react-icons/fa";
 import "./Navbar.css";
 
 const AppNavbar = () => {
-  const [role, setRole] = useState(null); // 'admin' | 'customer' | null
+  const [role, setRole] = useState(null);
   const navigate = useNavigate();
-  const location = useLocation(); // 🔥 This triggers effect on route change
+  const location = useLocation();
+
+  const checkLogin = () => {
+    const isAdmin = !!localStorage.getItem("adminToken");
+    const isCustomer = !!localStorage.getItem("customerToken");
+
+    if (isAdmin) {
+      setRole("admin");
+    } else if (isCustomer) {
+      setRole("customer");
+    } else {
+      setRole(null);
+    }
+  };
 
   useEffect(() => {
-    const checkLogin = () => {
-      const isAdmin = !!localStorage.getItem("adminToken");
-      const isCustomer = !!localStorage.getItem("customerToken");
+    checkLogin(); // On route change
+  }, [location]);
 
-      if (isAdmin) {
-        setRole("admin");
-      } else if (isCustomer) {
-        setRole("customer");
-      } else {
-        setRole(null);
-      }
-    };
+  useEffect(() => {
+    // ✅ Listen to localStorage updates (even same tab)
+    const syncRole = () => checkLogin();
+    window.addEventListener("storage", syncRole);
+    return () => window.removeEventListener("storage", syncRole);
+  }, []);
 
-    checkLogin(); // On load + route change
-  }, [location]); // 🔥 re-check on every route change
-
+  // ✅ Force refresh when logout is clicked
   const handleLogout = () => {
     if (role === "customer") {
       localStorage.removeItem("customerToken");
@@ -35,13 +43,16 @@ const AppNavbar = () => {
       localStorage.removeItem("adminToken");
     }
     localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("userRole");
+
+    // ✅ Force Navbar recheck
     setRole(null);
     navigate("/");
+    checkLogin(); // ✅ Manual trigger in same tab
   };
 
   const userName = localStorage.getItem("customerName") || "Customer";
 
-  // ❌ No navbar for Admin
   if (role === "admin") {
     return null;
   }
