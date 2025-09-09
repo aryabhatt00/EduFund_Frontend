@@ -152,10 +152,16 @@ const headers = {
 
   return (
     <Container className="mt-5">
-      <div className="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
-        <h3 className="mb-0">Transaction</h3>
-        <SessionTimer />
-      </div>
+<div className="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+  <h3 className="mb-0">Transaction</h3>
+  <div className="text-end">
+    <SessionTimer />
+    <div style={{ fontSize: "0.9rem", color: "#6c757d" }}>
+      Account Number: {localStorage.getItem("accountNumber") || "N/A"}
+    </div>
+  </div>
+</div>
+
 
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3">
