@@ -54,7 +54,16 @@ const CreateCustomer = () => {
     try {
       const res = await axios.post(`${API}/customer/create`, form);
       const { message, customerId, accountNumber } = res.data;
-      toast.success(`${message}\nCustomer ID: ${customerId}\nAccount: ${accountNumber}`);
+     if (message === "Email already exists") {
+  toast.error("❌ This email is already registered.");
+} else if (message === "Phone number already exists") {
+  toast.error("❌ This phone number is already in use.");
+} else if (customerId && accountNumber) {
+  toast.success(`✅ ${message}\n🆔 ID: ${customerId}\n🏦 Account: ${accountNumber}`);
+} else {
+  toast.error(`🚫 ${message || "Something went wrong!"}`);
+}
+
     } catch (err) {
       console.error("Error details:", err.response?.data || err.message);
       if (err.response?.status === 400 && typeof err.response.data === "object") {
