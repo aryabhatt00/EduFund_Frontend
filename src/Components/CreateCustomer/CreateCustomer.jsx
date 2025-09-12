@@ -48,31 +48,41 @@ const CreateCustomer = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setErrors({});
-    try {
-      const res = await axios.post(`${API}/customer/create`, form);
-      const { message, customerId, accountNumber } = res.data;
-     if (message === "Email already exists") {
-  toast.error("❌ This email is already registered.");
-} else if (message === "Phone number already exists") {
-  toast.error("❌ This phone number is already in use.");
-} else if (customerId && accountNumber) {
-  toast.success(`✅ ${message}\n🆔 ID: ${customerId}\n🏦 Account: ${accountNumber}`);
-} else {
-  toast.error(`🚫 ${message || "Something went wrong!"}`);
-}
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setErrors({});
 
-    } catch (err) {
-      console.error("Error details:", err.response?.data || err.message);
-      if (err.response?.status === 400 && typeof err.response.data === "object") {
-        setErrors(err.response.data);
-      } else {
-        toast.error("Error: " + (err.response?.data?.message || err.message));
-      }
+  try {
+    const res = await axios.post(`${API}/customer/create`, form);
+    const { message, customerId, accountNumber } = res.data;
+
+    // ✅ Show error toasts only for known messages
+    if (message === "Email already exists") {
+      toast.error("❌ This email is already registered.");
+      return;
     }
-  };
+
+    if (message === "Phone number already exists") {
+      toast.error("❌ This phone number is already in use.");
+      return;
+    }
+
+    // ✅ Only show success toast if ID & Account exist
+    if (customerId && accountNumber) {
+      toast.success(`✅ ${message}\n🆔 ID: ${customerId}\n🏦 Account: ${accountNumber}`);
+    } else {
+      toast.error(`🚫 ${message || "Something went wrong!"}`);
+    }
+
+  } catch (err) {
+    console.error("Error details:", err.response?.data || err.message);
+    if (err.response?.status === 400 && typeof err.response.data === "object") {
+      setErrors(err.response.data);
+    } else {
+      toast.error("Error: " + (err.response?.data?.message || err.message));
+    }
+  }
+};
 
   return (
     <Container className="fade-in py-4">
