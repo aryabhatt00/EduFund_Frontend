@@ -69,7 +69,9 @@ const handleSubmit = async (e) => {
 
     // ✅ Only show success toast if ID & Account exist
     if (customerId && accountNumber) {
-      toast.success(`✅ ${message}\n🆔 ID: ${customerId}\n🏦 Account: ${accountNumber}`);
+      toast.success(`✅ ${message}`);
+       toast.success(`🆔 ID: ${customerId}`);
+        toast.success(`🏦 Account: ${accountNumber}`);
     } else {
       toast.error(`🚫 ${message || "Something went wrong!"}`);
     }
