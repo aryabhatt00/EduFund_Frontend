@@ -4,7 +4,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./CreateCustomer.css";
-  
+
 const CreateCustomer = () => {
   const [form, setForm] = useState({
     customerName: "",
@@ -24,7 +24,10 @@ const CreateCustomer = () => {
       accountBalance: "",
     },
   });
+
+  const [errors, setErrors] = useState({});
   const API = process.env.REACT_APP_API_URL;
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -47,15 +50,18 @@ const CreateCustomer = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrors({});
     try {
       const res = await axios.post(`${API}/customer/create`, form);
       const { message, customerId, accountNumber } = res.data;
       toast.success(`${message}\nCustomer ID: ${customerId}\nAccount: ${accountNumber}`);
     } catch (err) {
       console.error("Error details:", err.response?.data || err.message);
-      toast.error(
-        "Error: " + (err.response?.data?.message || JSON.stringify(err.response?.data) || err.message)
-      );
+      if (err.response?.status === 400 && typeof err.response.data === "object") {
+        setErrors(err.response.data);
+      } else {
+        toast.error("Error: " + (err.response?.data?.message || err.message));
+      }
     }
   };
 
@@ -75,8 +81,12 @@ const CreateCustomer = () => {
                   value={form.customerName}
                   onChange={handleChange}
                   placeholder="Enter full name"
+                  isInvalid={!!errors.customerName}
                   required
                 />
+                <Form.Control.Feedback type="invalid">
+                  {errors.customerName}
+                </Form.Control.Feedback>
               </Form.Group>
 
               <Form.Group className="mb-3">
@@ -87,8 +97,12 @@ const CreateCustomer = () => {
                   value={form.customerEmail}
                   onChange={handleChange}
                   placeholder="Enter email"
+                  isInvalid={!!errors.customerEmail}
                   required
                 />
+                <Form.Control.Feedback type="invalid">
+                  {errors.customerEmail}
+                </Form.Control.Feedback>
               </Form.Group>
 
               <Form.Group className="mb-3">
@@ -99,8 +113,12 @@ const CreateCustomer = () => {
                   value={form.customerPhone}
                   onChange={handleChange}
                   placeholder="Enter phone number"
+                  isInvalid={!!errors.customerPhone}
                   required
                 />
+                <Form.Control.Feedback type="invalid">
+                  {errors.customerPhone}
+                </Form.Control.Feedback>
               </Form.Group>
 
               <Form.Group className="mb-3">
@@ -111,8 +129,12 @@ const CreateCustomer = () => {
                   value={form.password}
                   onChange={handleChange}
                   placeholder="Enter password"
+                  isInvalid={!!errors.password}
                   required
                 />
+                <Form.Control.Feedback type="invalid">
+                  {errors.password}
+                </Form.Control.Feedback>
               </Form.Group>
 
               <Form.Group className="mb-3">
@@ -122,8 +144,12 @@ const CreateCustomer = () => {
                   name="customerDateOfBirth"
                   value={form.customerDateOfBirth}
                   onChange={handleChange}
+                  isInvalid={!!errors.customerDateOfBirth}
                   required
                 />
+                <Form.Control.Feedback type="invalid">
+                  {errors.customerDateOfBirth}
+                </Form.Control.Feedback>
               </Form.Group>
 
               <Form.Group className="mb-3">
@@ -134,8 +160,12 @@ const CreateCustomer = () => {
                   value={form.customerAccount.accountBalance}
                   onChange={handleChange}
                   placeholder="Initial balance"
+                  isInvalid={!!errors["customerAccount.accountBalance"]}
                   required
                 />
+                <Form.Control.Feedback type="invalid">
+                  {errors["customerAccount.accountBalance"]}
+                </Form.Control.Feedback>
               </Form.Group>
             </Col>
 
@@ -146,8 +176,12 @@ const CreateCustomer = () => {
                   name="question1"
                   value={form.question1}
                   onChange={handleChange}
+                  isInvalid={!!errors.question1}
                   required
                 />
+                <Form.Control.Feedback type="invalid">
+                  {errors.question1}
+                </Form.Control.Feedback>
               </Form.Group>
 
               <Form.Group className="mb-3">
@@ -156,8 +190,12 @@ const CreateCustomer = () => {
                   name="question2"
                   value={form.question2}
                   onChange={handleChange}
+                  isInvalid={!!errors.question2}
                   required
                 />
+                <Form.Control.Feedback type="invalid">
+                  {errors.question2}
+                </Form.Control.Feedback>
               </Form.Group>
 
               <Form.Group className="mb-3">
@@ -166,8 +204,12 @@ const CreateCustomer = () => {
                   name="question3"
                   value={form.question3}
                   onChange={handleChange}
+                  isInvalid={!!errors.question3}
                   required
                 />
+                <Form.Control.Feedback type="invalid">
+                  {errors.question3}
+                </Form.Control.Feedback>
               </Form.Group>
 
               <Form.Group className="mb-3">
@@ -177,8 +219,12 @@ const CreateCustomer = () => {
                   value={form.customerAddress.streetName}
                   onChange={handleChange}
                   placeholder="Street"
+                  isInvalid={!!errors["customerAddress.streetName"]}
                   required
                 />
+                <Form.Control.Feedback type="invalid">
+                  {errors["customerAddress.streetName"]}
+                </Form.Control.Feedback>
               </Form.Group>
 
               <Form.Group className="mb-3">
@@ -188,8 +234,12 @@ const CreateCustomer = () => {
                   value={form.customerAddress.pinCode}
                   onChange={handleChange}
                   placeholder="Postal code"
+                  isInvalid={!!errors["customerAddress.pinCode"]}
                   required
                 />
+                <Form.Control.Feedback type="invalid">
+                  {errors["customerAddress.pinCode"]}
+                </Form.Control.Feedback>
               </Form.Group>
 
               <Form.Group className="mb-3">
@@ -199,8 +249,12 @@ const CreateCustomer = () => {
                   value={form.customerAddress.countryName}
                   onChange={handleChange}
                   placeholder="Country"
+                  isInvalid={!!errors["customerAddress.countryName"]}
                   required
                 />
+                <Form.Control.Feedback type="invalid">
+                  {errors["customerAddress.countryName"]}
+                </Form.Control.Feedback>
               </Form.Group>
             </Col>
           </Row>
